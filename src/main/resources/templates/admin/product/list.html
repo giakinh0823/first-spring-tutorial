@@ -54,6 +54,12 @@ layout:decorate="~{admin/layout/dashboard.html}">
 						<tr>
 							<th scope="col" class="px-6 py-3 text-center">Id</th>
 							<th scope="col" class="px-6 py-3 text-center">Name</th>
+							<th scope="col" class="px-6 py-3 text-center">Quantity</th>
+							<th scope="col" class="px-6 py-3 text-center">Price</th>
+							<th scope="col" class="px-6 py-3 text-center">Status</th>
+							<th scope="col" class="px-6 py-3 text-center">Category</th>
+							<th scope="col" class="px-6 py-3 text-center">Description</th>
+							<th scope="col" class="px-6 py-3 text-center">Image</th>
 							<th scope="col" class="px-6 py-3 text-center">Action</th>
 						</tr>
 					</thead>
@@ -62,6 +68,14 @@ layout:decorate="~{admin/layout/dashboard.html}">
 							class="bg-white border-b">
 							<td class="px-6 py-4 text-center" th:text="${item.id}"></td>
 							<td class="px-6 py-4 text-center" th:text="${item.name}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.quantity}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.price}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.status}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.category.name}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.description}"></td>
+							<td class="px-6 py-4 text-center flex justify-center">
+								<img class="w-[60px] h-[60px]" th:src="@{'/admin/products/images/'+${item.image}}"/>
+							</td>
 							<td class="px-6 py-4 text-center"><a class="text-blue-600"
 								th:href="@{'/admin/products/edit/'+${item.id}}">Edit</a> <span>/</span>
 								<a class="text-red-500"

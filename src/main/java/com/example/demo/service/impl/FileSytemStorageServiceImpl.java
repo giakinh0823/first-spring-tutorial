@@ -10,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.config.StorageProperties;
@@ -17,11 +18,13 @@ import com.example.demo.exception.StorageException;
 import com.example.demo.exception.StorageFileNotFoundException;
 import com.example.demo.service.StorageService;
 
+@Service
 public class FileSytemStorageServiceImpl implements StorageService{
 	/* Xác định đường dẫn gốc dùng để lưu file */
 	private final Path rootLocation;
 	
 	/* Tạo ra file lưu trữ dựa vào id truyền vào - mean(Lấy thông tin tên file để lưu trữ vào database) */
+	@Override
 	public String getStoredFileName(MultipartFile file, String id) {
 		/* 
 		 * Lấy type file ví dụ (.png, .jpg, .webp) 
@@ -43,6 +46,7 @@ public class FileSytemStorageServiceImpl implements StorageService{
 	}
 	
 	// Lưu nội dùng của file từ thành phần MultipartFile
+	@Override
 	public void store(MultipartFile file, String storedFilename) throws Exception {
 		try {
 			/* Nếu file rỗng thì ném ra ngoại lệ */
@@ -75,6 +79,7 @@ public class FileSytemStorageServiceImpl implements StorageService{
 	}
 	
 	// Dùng để nạp nội dung của file dưới dạng resource
+	@Override
 	public Resource loadAsResource(String filename) {
 		try {
 			Path file = load(filename);
@@ -90,18 +95,21 @@ public class FileSytemStorageServiceImpl implements StorageService{
 	}
 	
 	
+	@Override
 	public Path load(String filename) {
 		return rootLocation.resolve(filename);
 	}
 	
 	
 	// Xóa file
+	@Override
 	public void delete(String storedFilename) throws IOException {
 		Path destinationFile = rootLocation.resolve(Paths.get(storedFilename).normalize().toAbsolutePath());
 		Files.delete(destinationFile);
 	}
 	
 	// Khởi tạo thư mục
+	@Override
 	public void init() {
 		try {
 			Files.createDirectories(rootLocation);

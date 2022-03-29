@@ -9,7 +9,7 @@
 	<div layout:fragment="content">
 		<div class="container mx-auto mt-20">
 			<form th:action="@{/admin/products/save}" th:object="${product}"
-				class="max-w-lg mx-auto" method="post">
+				class="max-w-lg mx-auto" method="post" enctype="multipart/form-data">
 				<div>
 					<h3 class="text-3xl mb-6" th:unless="${product.edit}">New
 						product</h3>
@@ -67,15 +67,14 @@
 					</p>
 				</div>
 				<div class="mb-6">
+					<input id="image" type="hidden"   th:if="${product.edit && product.image!=null}" th:field="*{image}"/>
+					<div class="flex justify-center mb-6" th:if="${product.edit && product.image!=null}">
+						<img class="w-[200px] h-[200px]" th:src="@{'/admin/products/images/'+${product.image}}"/>
+					</div>
 					<label for="imageFile"
 						class="block mb-2 text-sm font-medium text-gray-900">Image</label>
-					<input id="imageFile" type="file" th:field="*{imageFile}"
+					<input id="imageFile" type="file" name="imageFile"
 						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
-					<p th:if="${#fields.hasErrors('imageFile')}"
-						class="mt-2 text-sm text-red-600 dark:text-red-500">
-						<span class="font-medium">Oops!</span> Image is required or
-						invalid
-					</p>
 				</div>
 				<div class="mb-6">
 					<label for="status"
@@ -89,9 +88,9 @@
 						<option value="3">Bestseller</option>
 						<option value="4">Out of Order</option>
 					</select>
-					<p th:if="${#fields.hasErrors('imageFile')}"
+					<p th:if="${#fields.hasErrors('status')}"
 						class="mt-2 text-sm text-red-600 dark:text-red-500">
-						<span class="font-medium">Oops!</span> Image is required or
+						<span class="font-medium">Oops!</span> Status is required or
 						invalid
 					</p>
 				</div>
@@ -103,11 +102,15 @@
 						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
 						<option th:each=" category:${categories}" th:value="${category.id}"  th:selected="${category.id == product.categoryId}" th:text="${category.name}"></option>
 					</select>
-					<p th:if="${#fields.hasErrors('imageFile')}"
+					<p th:if="${#fields.hasErrors('categoryId')}"
 						class="mt-2 text-sm text-red-600 dark:text-red-500">
-						<span class="font-medium">Oops!</span> Image is required or
+						<span class="font-medium">Oops!</span> Category is required or
 						invalid
 					</p>
+				</div>
+				<div class="mb-6">
+					<label for="description" class="block mb-2 text-sm font-medium text-gray-900">Description</label>
+					<textarea th:field="*{description}" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="description..."></textarea>
 				</div>
 				<button th:unless="${product.edit}" type="submit"
 					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none">Add</button>
