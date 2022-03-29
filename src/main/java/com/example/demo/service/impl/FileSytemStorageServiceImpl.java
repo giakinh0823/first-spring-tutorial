@@ -18,35 +18,55 @@ import com.example.demo.exception.StorageFileNotFoundException;
 import com.example.demo.service.StorageService;
 
 public class FileSytemStorageServiceImpl implements StorageService{
-	// Đường dẫn gốc dùng để lưu file
+	/* Xác định đường dẫn gốc dùng để lưu file */
 	private final Path rootLocation;
 	
-	// Tạo ra file lưu trữ dựa vào id truyền vào
+	/* Tạo ra file lưu trữ dựa vào id truyền vào - mean(Lấy thông tin tên file để lưu trữ vào database) */
 	public String getStoredFileName(MultipartFile file, String id) {
-		String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+		/* 
+		 * Lấy type file ví dụ (.png, .jpg, .webp) 
+		 * file.getOriginalFilename(): Trả về tên tile được upload tới server
+		 * 
+		 * */
+		String ext = FilenameUtils.getExtension(file.getOriginalFilename()); 
 		return "p"+id+"."+ext;
 	}
 	
-	// Tạo contructor truyền thông tin cấu hình lưu trữ
+	// Tạo contructor truyền thông tin cấu hình lưu trữ - (Đưa các cấu hình để cho phép lưu trữ)
 	public FileSytemStorageServiceImpl(StorageProperties properties) {
+		/* 
+		 * properties.getLocation() ->uploads/images
+		 * Thông tin được lấy ở application.properties
+		 * 
+		 * */
 		this.rootLocation = Paths.get(properties.getLocation());
 	}
 	
 	// Lưu nội dùng của file từ thành phần MultipartFile
 	public void store(MultipartFile file, String storedFilename) throws Exception {
 		try {
+			/* Nếu file rỗng thì ném ra ngoại lệ */
 			if(file.isEmpty()) {
 				throw new Exception("Failed to store empty file");
 			}
+			/* 
+			 * - Thực hiện tính toán 
+			 * - lấy thông tin của storedFilename - 
+			 * - Chuẩn hóa normalize
+			 * - Chuyển đường dẫn thành absolute(tuyệt đối)
+			 * 
+			 * */
 			Path destinationFile= this.rootLocation
 					.resolve(Paths.get(storedFilename))
 					.normalize().toAbsolutePath();
+			
+			/* Nếu đường dẫn khác thì ném ra ngoại lệ - tức là lưu file ra ngoài đường dẫn root */
 			if(!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
 				throw new Exception("Cannot store file outside current directory");
 			}
+			/*Lưu file vào đường dẫn và thay thế file hiện tại nếu file đã tồn tại*/
 			try(InputStream inputSteam = file.getInputStream()){
 				Files.copy(inputSteam, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-				
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
