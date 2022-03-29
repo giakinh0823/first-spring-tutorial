@@ -105,9 +105,10 @@ public class CategoryController {
 	}
 
 	@GetMapping("delete/{id}")
-	public String delete(@PathVariable("id") Long id,
-			@RequestHeader(value = "referer", required = false) String referer) {
+	public ModelAndView delete(@PathVariable("id") Long id,
+			@RequestHeader(value = "referer", required = false) String referer, ModelMap model) {
 		categoryService.deleteById(id);
-		return "redirect:" + referer;
+		model.addAttribute("success", "Category is deleted!");
+		return new ModelAndView("redirect:" + referer, model);
 	}
 }

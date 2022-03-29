@@ -104,7 +104,7 @@ public class FileSytemStorageServiceImpl implements StorageService{
 	// Xóa file
 	@Override
 	public void delete(String storedFilename) throws IOException {
-		Path destinationFile = rootLocation.resolve(Paths.get(storedFilename).normalize().toAbsolutePath());
+		Path destinationFile = rootLocation.resolve(Paths.get(storedFilename)).normalize().toAbsolutePath();
 		Files.delete(destinationFile);
 	}
 	

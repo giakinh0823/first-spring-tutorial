@@ -67,7 +67,7 @@
 					</p>
 				</div>
 				<div class="mb-6">
-					<input id="image" type="hidden"   th:if="${product.edit && product.image!=null}" th:field="*{image}"/>
+					<input id="image" type="hidden" th:if="${product.edit && product.image!=null}" th:field="*{image}"/>
 					<div class="flex justify-center mb-6" th:if="${product.edit && product.image!=null}">
 						<img class="w-[200px] h-[200px]" th:src="@{'/admin/products/images/'+${product.image}}"/>
 					</div>

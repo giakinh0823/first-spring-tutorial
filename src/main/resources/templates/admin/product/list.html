@@ -89,7 +89,7 @@ layout:decorate="~{admin/layout/dashboard.html}">
 				<nav class="mt-10" th:if="${results.totalPages > 0}">
 					<ul class="inline-flex -space-x-px">
 						<li><a
-							th:href="@{/admin/categories(name=${name}, page=${results.number > 0 ? results.number:1}, size=${size})}"
+							th:href="@{/admin/products(name=${name}, page=${results.number > 0 ? results.number:1}, size=${size})}"
 							class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Previous</a>
 						</li>
 						<li th:each=" page :${pages}" th:if="${page>=0}"><a
