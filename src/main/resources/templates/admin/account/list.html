@@ -11,7 +11,7 @@
 			<div class="flex justify-between items-center">
 				<div class="p-4">
 					<label for="table-search" class="sr-only">Search</label>
-					<form th:action="@{/admin/products}" method="get">
+					<form th:action="@{/admin/accounts}" method="get">
 						<div class="relative flex items-center">
 							<input name="size" type="hidden" th:value="${size}" />
 							<div
@@ -26,8 +26,7 @@
 							<input type="text" id="name" name="name"
 								class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5"
 								placeholder="Search for items">
-							<Button type="submit"
-								class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 ml-3 focus:outline-none">
+							<Button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 ml-3 focus:outline-none">
 								Search
 								</Buton>
 						</div>
@@ -44,55 +43,40 @@
 							<option value="20">20</option>
 						</select>
 					</form>
-					<a href="/admin/products/add"
+					<a href="/admin/accounts/add"
 						class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 mr-2 ml-5 focus:outline-none">Add</a>
 				</div>
 			</div>
 			<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-				<div
-					th:if="${success!=null}"
+				<div th:if="${success!=null}"
 					class="p-4 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
 					role="alert">
-					<span class="font-medium">Success!</span>
-					<span th:text="${success}"></span>
+					<span class="font-medium">Success!</span> <span
+						th:text="${success}"></span>
 				</div>
-				<div
-					th:if="${error!=null}"
+				<div th:if="${error!=null}"
 					class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
 					role="alert">
-					<span class="font-medium">Error!</span>
-					<span th:text="${error}"></span>
+					<span class="font-medium">Error!</span> <span th:text="${error}"></span>
 				</div>
 				<table class="w-full text-sm text-left text-gray-500">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
-							<th scope="col" class="px-6 py-3 text-center">Id</th>
-							<th scope="col" class="px-6 py-3 text-center">Name</th>
-							<th scope="col" class="px-6 py-3 text-center">Quantity</th>
-							<th scope="col" class="px-6 py-3 text-center">Price</th>
-							<th scope="col" class="px-6 py-3 text-center">Status</th>
-							<th scope="col" class="px-6 py-3 text-center">Category</th>
-							<th scope="col" class="px-6 py-3 text-center">Description</th>
-							<th scope="col" class="px-6 py-3 text-center">Image</th>
+							<th scope="col" class="px-6 py-3 text-center">Username</th>
+							<th scope="col" class="px-6 py-3 text-center">Password</th>
 							<th scope="col" class="px-6 py-3 text-center">Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each=" item: ${results.content}" class="bg-white border-b">
-							<td class="px-6 py-4 text-center" th:text="${item.id}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.name}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.quantity}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.price}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.status}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.category.name}"></td>
-							<td class="px-6 py-4 text-center" th:text="${item.description}"></td>
-							<td class="px-6 py-4 text-center flex justify-center"><img
-								class="w-[60px] h-[60px]"
-								th:src="@{'/admin/products/images/'+${item.image}}" /></td>
+						<tr th:each=" item: ${results.content}"
+							class="bg-white border-b">
+							<td class="px-6 py-4 text-center" th:text="${item.username}"></td>
+							<td class="px-6 py-4 text-center" th:text="${item.password}"></td>
 							<td class="px-6 py-4 text-center"><a class="text-blue-600"
-								th:href="@{'/admin/products/edit/'+${item.id}}">Edit</a> <span>/</span>
+								th:href="@{'/admin/accounts/edit/'+${item.username}}">Edit</a> <span>/</span>
 								<a class="text-red-500"
-								th:href="@{'/admin/products/delete/'+${item.id}}">Delete</a></td>
+								th:href="@{'/admin/accounts/delete/'+${item.username}}">Delete</a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -101,20 +85,20 @@
 				<nav class="mt-10" th:if="${results.totalPages > 0}">
 					<ul class="inline-flex -space-x-px">
 						<li><a
-							th:href="@{/admin/products(name=${name}, page=${results.number > 0 ? results.number:1}, size=${size})}"
+							th:href="@{/admin/accounts(name=${name}, page=${results.number > 0 ? results.number:1}, size=${size})}"
 							class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Previous</a>
 						</li>
 						<li th:each=" page :${pages}" th:if="${page>=0}"><a
 							th:if="${page!=results.number+1}" th:text="${page}"
-							th:href="@{/admin/products(name=${name}, page=${page})}"
+							th:href="@{/admin/accounts(name=${name}, page=${page})}"
 							class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 "></a>
 							<a th:if="${page==results.number+1}" th:text="${page}"
-							th:href="@{/admin/products/search(name=${name}, page=${page}, size=${size})}"
+							th:href="@{/admin/accounts/search(name=${name}, page=${page}, size=${size})}"
 							aria-current="page"
 							class="py-2 px-3 text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700"></a>
 						</li>
 						<li><a
-							th:href="@{/admin/products(name=${name}, page=${results.number+2 > results.totalPages ? results.totalPages : results.number+2}, size=${size})}"
+							th:href="@{/admin/accounts(name=${name}, page=${results.number+2 > results.totalPages ? results.totalPages : results.number+2}, size=${size})}"
 							class="py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Next</a>
 						</li>
 					</ul>

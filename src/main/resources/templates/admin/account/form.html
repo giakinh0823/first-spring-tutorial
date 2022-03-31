@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/dashboard.html}">
+<head>
+<meta charset="ISO-8859-1">
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="container mx-auto mt-20">
+			<form th:action="@{/admin/accounts/save}" th:object="${account}"
+				class="max-w-lg mx-auto" method="post">
+				<div>
+					<h3 class="text-3xl mb-6" th:unless="${account.edit}">New
+						Account</h3>
+					<h3 class="text-3xl mb-6" th:if="${account.edit}">Update
+						Account</h3>
+				</div>
+				<input type="hidden" th:field="*{edit}" />
+				<div class="mb-6">
+					<label for="username"
+						class="block mb-2 text-sm font-medium text-gray-900">username</label> <input
+						type="text" id="username" th:field="*{username}"
+						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+					<p th:if="${#fields.hasErrors('username')}"
+						class="mt-2 text-sm text-red-600 dark:text-red-500">
+						<span class="font-medium">Oops!</span> Username is required or invalid
+					</p>
+				</div>
+				<div class="mb-6">
+					<label for="name"
+						class="block mb-2 text-sm font-medium text-gray-900">password</label>
+					<input type="text" id="password" th:field="*{password}"
+						class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+					<p th:if="${#fields.hasErrors('password')}"
+						class="mt-2 text-sm text-red-600 dark:text-red-500">
+						<span class="font-medium">Oops!</span> Password is required or invalid
+					</p>
+				</div>
+				<button th:unless="${account.edit}" type="submit"
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none">Add</button>
+				<button th:if="${account.edit}" type="submit"
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none">Update</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

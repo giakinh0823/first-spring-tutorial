@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.domain.Category;
 import com.example.demo.domain.Product;
@@ -72,7 +73,7 @@ public class ProductController {
 	
 	
 	@GetMapping("")
-	public String search(@RequestParam(name = "name", required = false) String name, ModelMap model,
+	public ModelAndView search(@RequestParam(name = "name", required = false) String name, ModelMap model,
 			@RequestParam(name= "page") Optional<Integer> page, 
 			@RequestParam(name= "size") Optional<Integer> size) {
 		int pageSize = size.orElse(5);
@@ -101,12 +102,12 @@ public class ProductController {
 			model.addAttribute("pages", pages);
 		}
 		model.addAttribute("results", results);
-		return "admin/product/list";
+		return new ModelAndView("admin/product/list", model);
 	}
 	
 	@PostMapping("save")
 	public ModelAndView save(ModelMap model, @Valid @ModelAttribute("product") ProductDto productDto,
-			BindingResult result) {
+			BindingResult result, final RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			return new ModelAndView("admin/product/form");
 		}
@@ -126,14 +127,14 @@ public class ProductController {
 			} catch (Exception e) {
 				// TODO: handle exception
 				model.addAttribute("error", "Cant not save file");
-				System.out.println("Cant not save file");
 				return new ModelAndView("admin/product/form");
 			}
 		}
 
 		productService.save(product);
 		model.addAttribute("success", "Product save success!");
-		return new ModelAndView("redirect:/admin/products", model);
+		redirectAttributes.addFlashAttribute("success", "Product save success!");
+		return new ModelAndView("redirect:/admin/products");
 	}
 	
 	@GetMapping("edit/{id}")
@@ -158,18 +159,16 @@ public class ProductController {
 	
 	@GetMapping("delete/{id}")
 	public ModelAndView delete(@PathVariable("id") Long id,
-			@RequestHeader(value = "referer", required = false) String referer, ModelMap model) throws IOException {
+			@RequestHeader(value = "referer", required = false) String referer, ModelMap model,
+			final RedirectAttributes redirectAttributes) throws IOException {
 		Optional<Product> optional = productService.findById(id);
 		if(optional.isPresent()) {
 			if(!StringUtils.isEmpty(optional.get().getImage())) {
 				storageService.delete(optional.get().getImage());
-				model.addAttribute("success", "Product is deleted!");
-			}else {
-				model.addAttribute("error", "Product is not found");
 			}
 		}
-		
 		productService.deleteById(optional.get().getId());
-		return new ModelAndView("redirect:" + referer, model);
+		redirectAttributes.addFlashAttribute("success", "Product is deleted!");
+		return new ModelAndView("redirect:" + referer);
 	}
 }
